@@ -5,7 +5,16 @@ from src.Commands import *
 
 
 class Interpreter:
+    """
+    содержит основную логику работы интерпретатора
+    """
+
     def from_abstract_to_concrete(self, commands):
+        """
+        получает из исходного списка абстрактных команд(имя и параметры) конкретные команды (echo, cat и тд)
+        :param commands: список абстрактных команд
+        :return: список конкретных команд
+        """
 
         def delete_quotes(args):
             new_args = []
@@ -34,6 +43,12 @@ class Interpreter:
         return result_list
 
     def interpolation_command(self, command, env):
+        """
+        подставляет аргументы внутрь переменной одной абстрактной команды
+        :param command: абстрактная команда с переменными в аргументах
+        :param env: окружение
+        :return: абстрактная команда со значениями в агрументах
+        """
 
         def find_var(m):
             var = m.group(1)
@@ -51,25 +66,24 @@ class Interpreter:
         return new_command
 
     def interpolation_commands_list(self, commands, env):
+        """
+        подставляет аргументы внутрь переменной списка абстрактных команд
+        :param commands: список абстрактных команд с переменными в аргументах
+        :param env: окружение
+        :return: список абстрактных команд со значениями в агрументах
+        """
         new_commands_list = []
         for i in commands:
             new_commands_list.append(self.interpolation_command(i, env))
         return new_commands_list
 
-    def from_commands_list_to_string(self, commands):
-        result = ""
-        for i in range(len(commands)):
-            command = commands[i]
-            if command.name != "=":
-                result += command.name + " "
-                result += " ".join(command.args)
-            else:
-                result += command.args[0] + "=" + command.args[1]
-            if i < len(commands) - 1:
-                result += " | "
-        return result
-
     def run_commands_list(self, commands, env):
+        """
+        последовательно запускает каждую из списка конкретных команд
+        и выводит на экран результирующий выходной поток
+        :param commands: список конкретных команд
+        :param env: окружение
+        """
         result = commands[0].run("", env)
         for i in range(1, len(commands)):
             result = commands[i].run(result.output_stream, env)

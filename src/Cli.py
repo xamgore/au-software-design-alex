@@ -6,6 +6,9 @@ from src.Exceptions import *
 
 class Cli:
     def main(self):
+        """
+        обеспечивает основной цикл ввода команд интерпретатора
+        """
         env = Environment()
         while True:
             try:

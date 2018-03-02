@@ -6,6 +6,10 @@ import subprocess
 
 
 class CommandResult:
+    """
+    описывает результат работы каждой команды
+    хранит в себе выходной поток
+    """
     def __init__(self, output_stream=""):
         self.output_stream = output_stream
 
@@ -22,6 +26,10 @@ class Command(ABC):
 
 
 class External(Command):
+    """
+    внешняя команды
+    например, git status
+    """
     def run(self, input_stream, env):
         process_result = None
         try:
@@ -35,18 +43,30 @@ class External(Command):
 
 
 class Assignment(Command):
+    """
+    команда присваивания
+    например, x=5
+    """
     def run(self, input_stream, env):
         env.add_var(self.args[0], self.args[1])
         return CommandResult()
 
 
 class Echo(Command):
+    """
+    команда echo вывода в поток
+    например, echo 5
+    """
     def run(self, input_stream, env):
         return CommandResult(
             " ".join(self.args) if len(self.args) != 0 else " ")
 
 
 class Cat(Command):
+    """
+    команда cat чтения файла и вывода в поток
+    например, cat "example.txt"
+    """
     def run(self, input_stream, env):
         if len(self.args) == 0:
             return CommandResult(input_stream)
@@ -61,6 +81,10 @@ class Cat(Command):
 
 
 class Wc(Command):
+    """
+    команда wc - отображает число строк, слов, байт в файле
+    например, wc "example.txt"
+    """
     def __wc(self, input_stream):
         line_count = words_count = bytes_count = 0
         for line in input_stream.split('\n'):
@@ -84,10 +108,18 @@ class Wc(Command):
 
 
 class Pwd(Command):
+    """
+    команда pwd отображает текущую рабочую директорию
+    например, pwd
+    """
     def run(self, input_stream, env):
         return CommandResult(env.get_cur_dir())
 
 
 class Exit(Command):
+    """
+    команда exit выхода из консоли
+    например, exit
+    """
     def run(self, input_stream, env):
         sys.exit()
