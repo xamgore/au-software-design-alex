@@ -62,3 +62,15 @@ class CommandTest(unittest.TestCase):
         command = Wc([])
         self.assertEqual(command.run("Hello, World!", env),
                          CommandResult("\t 1 \t 2 \t 13"))
+
+    def test_cd(self):
+        env = Environment()
+        path = os.getcwd()
+
+        Cd([]).run("", env)
+        root = Pwd([]).run("", env).output_stream
+        self.assertTrue(path.startswith(root))
+
+        Cd([]).run("", env)
+        path = Pwd([]).run("", env).output_stream
+        self.assertTrue(path.startswith(root))
