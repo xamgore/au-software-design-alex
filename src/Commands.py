@@ -3,6 +3,7 @@ from abc import ABC
 import os
 import sys
 import subprocess
+from pathlib import Path
 
 
 class CommandResult:
@@ -123,3 +124,33 @@ class Exit(Command):
     """
     def run(self, input_stream, env):
         sys.exit()
+
+
+class Ls(Command):
+    """
+    команда ls вывода содержимого текущей дериктории
+    например, ls /home
+    """
+    def run(self, input_stream, env):
+        path = (self.args + ['.'])[0]
+
+        try:
+            dirs = os.listdir(path)
+            return CommandResult('\n'.join(dirs))
+        except Exception as e:
+            raise CommandFileException(e)
+
+
+class Cd(Command):
+    """
+    команда cd смены текущей директории
+    """
+    def run(self, input_stream, env):
+        home = str(Path.home())
+        path = (self.args + [home])[0]
+
+        try:
+            os.chdir(path)
+            return CommandResult()
+        except Exception as e:
+            raise CommandFileException(e)

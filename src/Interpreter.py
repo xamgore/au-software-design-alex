@@ -35,6 +35,10 @@ class Interpreter:
                 result_list.append(Pwd(delete_quotes(command.args)))
             elif name == "exit":
                 result_list.append(Exit(delete_quotes(command.args)))
+            elif name == "ls":
+                result_list.append(Ls(delete_quotes(command.args)))
+            elif name == "cd":
+                result_list.append(Cd(delete_quotes(command.args)))
             elif name == "=":
                 result_list.append(Assignment(delete_quotes(command.args)))
             else:

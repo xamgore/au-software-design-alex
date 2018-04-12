@@ -8,13 +8,12 @@ class Environment:
     """
     def __init__(self):
         self._vars = dict()
-        self._cur_dir = os.getcwd()
 
     def get_cur_dir(self):
         """
         :return: возвращает текущую рабочую директорию
         """
-        return self._cur_dir
+        return os.getcwd()
 
     def add_var(self, name, value):
         """
